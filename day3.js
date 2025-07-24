@@ -1,43 +1,40 @@
-//global scope:variables  declared outside any function or block are in the global scope
-//function scope:only accessible in the function in which they are declared
-//block scope:the block scope of a variable means that the variables is accessible 
-//within the block that is between the curlybraces
-function SendMessage(){
-    let x=10;
-    console.log(x);//within
-}
-SendMessage();
+let taskList = [];
 
-function check(){
-    if(true){
-        let name="webdevelopment";
-        var iscloudy=true;
-        console.log(name);
+function addTask(task, callback) {
+    taskList.push(task);
+    console.log(`Task "${task}" added.`);
+    callback(); 
+}
+
+const printTasks = () => {
+    console.log("Current Tasks:");
+    if (taskList.length === 0) {
+        console.log("No tasks in the list.");
+    } else {
+        taskList.forEach((task, index) => {
+            console.log(`${index + 1}. ${task}`);
+        });
     }
-    console.log(iscloudy);
-}
-check()
-//callback function in js:a callback function in javascript is a function that is passed as an arguement
-//to another function,and it is executed after the completion of that function
-// commonly used for:handling asynchronous operations(like api calls,timeouts,or event handling)
-//customizing behavior inside functions
-function First(){
-    console.log("This is my first function");
-}
-First()
-function Second(callback){
-    console.log("This is my second function");
-    
-}
-Second(First)
-//clearinterval
+};
 
-let count=0;
-let Input=()=>{ //arrow function
-    count++;
-    console.log(count);
-    if(count<5){
-        Input();
+const addMultipleTasks = function (...tasks) {
+    tasks.forEach(task => {
+        taskList.push(task);
+        console.log(`Task "${task}" added.`);
+    });
+    printTasks(); 
+};
+
+function scopeExample() {
+    let insideVar = "I am inside the function";
+    console.log(insideVar); 
+
+    console.log(taskList);
 }
-}
-Input();
+
+addTask("Buy groceries", printTasks);
+
+addMultipleTasks("Clean room", "Pay bills", "Read a book");
+
+scopeExample();
+
