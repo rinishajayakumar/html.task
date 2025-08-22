@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+</head>
+<body>
+    <input type="text" placeholder="Enter your list" id="inputvalue">
+    <button onclick="addTask()">Add Task</button>
+    <ul id="listContent"></ul>
+
+    <script>
+        function addTask() {
+            let textValue = document.getElementById("inputvalue").value.trim();
+            if (textValue === "") return;
+
+            let li = document.createElement("li");
+            li.textContent = textValue;
+
+            const removeBtn = document.createElement("button");
+            removeBtn.textContent = "Remove";
+            removeBtn.addEventListener("click", function () {
+                li.remove();
+            });
+
+            li.appendChild(removeBtn);
+            document.getElementById("listContent").appendChild(li);
+        }
+    </script>
+</body>
+</html>
