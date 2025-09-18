@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Persistent To-Do List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f9f9f9;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      width: 300px;
+    }
+    button {
+      padding: 10px 15px;
+      font-size: 16px;
+      margin-left: 5px;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin-top: 20px;
+    }
+    li {
+      padding: 10px;
+      margin-bottom: 5px;
+      background: #fff;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .done {
+      text-decoration: line-through;
+      color: gray;
+    }
+    .task-text {
+      flex: 1;
+      cursor: pointer;
+    }
+    button.delete-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>To-Do List</h1>
+  <input id="taskInput" placeholder="Enter a task..." />
+  <button id="addBtn">Add</button>
+
+  <ul id="taskList"></ul>
+
+  <script>
+
+    const taskInput = document.getElementById('taskInput');
+    const taskList = document.getElementById('taskList');
+    const addBtn = document.getElementById('addBtn');
+
+    const LOCAL_KEY = 'todoTasks'; 
+    const SESSION_KEY = 'tempTaskInput'; 
+
+    taskInput.addEventListener('input', () => {
+      sessionStorage.setItem(SESSION_KEY, taskInput.value);
+    });
+
+    window.addEventListener('load', () => {
+      const savedInput = sessionStorage.getItem(SESSION_KEY);
+      if (savedInput) taskInput.value = savedInput;
+      renderTasks();
+    });
+
+    addBtn.addEventListener('click', addTask);
+    taskInput.addEventListener('keypress', e => {
+      if (e.key === 'Enter') addTask();
+    });
+
+    function getTasks() {
+      const tasks = localStorage.getItem(LOCAL_KEY);
+      return tasks ? JSON.parse(tasks) : [];
+    }
+
+    function saveTasks(tasks) {
+      localStorage.setItem(LOCAL_KEY, JSON.stringify(tasks));
+    }
+
+    function addTask() {
+      const text = taskInput.value.trim();
+      if (!text) return;
+
+      const tasks = getTasks();
+      tasks.push({ text, done: false });
+      saveTasks(tasks);
+
+      taskInput.value = '';
+      sessionStorage.removeItem(SESSION_KEY);
+      renderTasks();
+    }
+
+    function toggleTask(index) {
+      const tasks = getTasks();
+      tasks[index].done = !tasks[index].done;
+      saveTasks(tasks);
+      renderTasks();
+    }
+
+    function deleteTask(index) {
+      const tasks = getTasks();
+      tasks.splice(index, 1);
+      saveTasks(tasks);
+      renderTasks();
+    }
+    function renderTasks() {
+      const tasks = getTasks();
+      taskList.innerHTML = '';
+
+      tasks.forEach((task, index) => {
+        const li = document.createElement('li');
+
+        const span = document.createElement('span');
+        span.textContent = task.text;
+        span.className = 'task-text' + (task.done ? ' done' : '');
+        span.onclick = () => toggleTask(index);
+
+        const delBtn = document.createElement('button');
+        delBtn.textContent = '❌';
+        delBtn.className = 'delete-btn';
+        delBtn.onclick = e => {
+          e.stopPropagation();
+          deleteTask(index);
+        };
+
+        li.appendChild(span);
+        li.appendChild(delBtn);
+        taskList.appendChild(li);
+      });
+    }
+  </script>
+</body>
+</html>
