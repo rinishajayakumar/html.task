@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="slider">
+        <div class="number-display" id="numberBox">1</div>
+        <button id="next">Next</button>
+        <button id="prev">Previous</button>
+    </div>
+    <script>
+        let numbers=[1,2,3,4,5];
+        console.log(numbers.length);
+        let currentIndex=0
+
+        let numberBox=document.getElementById("numberBox");
+        let preBtn=document.getElementById("prev");
+        let nextBtn=document.getElementById("next");
+
+        nextBtn.addEventListener("click",()=>{
+            currentIndex=(currentIndex + 1) % numbers.length;
+            //0=0+1=1%5=1
+            numberBox.textContent=numbers[currentIndex];
+        })
+
+        preBtn.addEventListener("click" , ()=>{
+            currentIndex=(currentIndex -1 + numbers.length) % numbers.length;
+            //5=
+        })
+    </script>
+</body>
+</html>
